@@ -1,0 +1,153 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.cart-page-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cart-table-card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+
+  .cart-header {
+    @include flex-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1rem;
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $dark;
+    }
+  }
+
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      padding: 0.8rem;
+      font-size: 0.85rem;
+      color: #777;
+      border-bottom: 1px solid #eee;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 1rem 0.8rem;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+
+    .item-cell {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #f8f9fa;
+      }
+
+      .item-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: $dark;
+      }
+      .item-sub {
+        font-size: 0.78rem;
+        color: #888;
+      }
+    }
+  }
+}
+
+.order-summary-card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .coupon-box {
+    margin-bottom: 1.2rem;
+
+    .coupon-input-group {
+      display: flex;
+      gap: 0.5rem;
+
+      input {
+        flex: 1;
+        padding: 0.5rem 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: $border-radius-sm;
+        outline: none;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+      }
+    }
+
+    .applied-coupon-tag {
+      background: #e8f5e9;
+      color: $primary-dark;
+      padding: 0.5rem 0.8rem;
+      border-radius: $border-radius-sm;
+      font-size: 0.82rem;
+      font-weight: 600;
+      @include flex-between;
+      margin-top: 0.5rem;
+
+      .remove-cpn {
+        color: $danger;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .summary-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .s-row {
+      @include flex-between;
+      font-size: 0.9rem;
+      color: #555;
+
+      &.total-row {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: $dark;
+        border-top: 2px dashed #eee;
+        padding-top: 0.8rem;
+        margin-top: 0.4rem;
+
+        .total-price { color: $primary-dark; }
+      }
+    }
+  }
+}

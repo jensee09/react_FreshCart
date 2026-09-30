@@ -1,0 +1,215 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.cart-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: $z-index-modal-backdrop;
+  animation: fadeIn 200ms ease;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  z-index: $z-index-modal;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideLeft 250ms ease;
+
+  .drawer-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    @include flex-between;
+    background: #f8f9fa;
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: $dark;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close-drawer {
+      font-size: 1.3rem;
+      color: #777;
+      &:hover {
+        color: $dark;
+      }
+    }
+  }
+
+  .free-shipping-bar {
+    padding: 0.75rem 1.5rem;
+    background: #e8f5e9;
+    border-bottom: 1px solid #c8e6c9;
+
+    .fs-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: $primary-dark;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: #c8e6c9;
+      border-radius: 3px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, $primary-light, $primary);
+        border-radius: 3px;
+        transition: width $transition-base;
+      }
+    }
+  }
+
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+
+    .empty-cart-state {
+      height: 100%;
+      @include flex-center;
+      flex-direction: column;
+      text-align: center;
+      color: #777;
+      gap: 1rem;
+
+      .empty-icon {
+        font-size: 4rem;
+        color: #ccc;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    .cart-item-row {
+      display: flex;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid #f0f0f0;
+
+      img {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #f8f9fa;
+      }
+
+      .item-details {
+        flex: 1;
+
+        .item-title {
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: $dark;
+          margin-bottom: 0.2rem;
+          line-height: 1.2;
+        }
+
+        .item-weight {
+          font-size: 0.75rem;
+          color: #888;
+          margin-bottom: 0.4rem;
+        }
+
+        .item-row-footer {
+          @include flex-between;
+
+          .price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: $primary-dark;
+          }
+
+          .qty-btn-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+
+            button {
+              padding: 0.1rem 0.5rem;
+              font-weight: 700;
+              color: #555;
+              &:hover {
+                background: #eee;
+              }
+            }
+            span {
+              padding: 0 0.4rem;
+              font-size: 0.82rem;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      .remove-item-btn {
+        color: #bbb;
+        font-size: 1rem;
+        height: fit-content;
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
+  }
+
+  .drawer-footer {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid #eee;
+    background: #ffffff;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+
+    .summary-line {
+      @include flex-between;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: #666;
+
+      &.total-line {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: $dark;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #ddd;
+
+        .total-val {
+          color: $primary-dark;
+        }
+      }
+    }
+
+    .checkout-btn {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

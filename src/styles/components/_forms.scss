@@ -1,0 +1,102 @@
+@use "../variables" as *;
+
+.form-group {
+  margin-bottom: 1.2rem;
+
+  label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: $border-radius;
+    outline: none;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+    }
+  }
+
+  .form-text {
+    font-size: 0.78rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  user-select: none;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: $primary;
+    cursor: pointer;
+  }
+
+}
+
+.auth-role-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1.35rem;
+  padding: 0.35rem;
+  border: 1px solid #e6eee5;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f7faf7, #edf5ed);
+}
+
+.auth-role-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #58635a;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background $transition-fast, border-color $transition-fast, color $transition-fast, box-shadow $transition-fast, transform $transition-fast;
+
+  &.active {
+    border-color: $primary;
+    background: linear-gradient(135deg, $primary-light, $primary);
+    color: #fff;
+    box-shadow: 0 5px 14px rgba(46, 125, 50, 0.24);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(46, 125, 50, 0.25);
+    outline-offset: 2px;
+  }
+
+  &:not(.active):hover {
+    background: #fff;
+    color: $primary-dark;
+    transform: translateY(-1px);
+  }
+}
+
+.image-upload-error {
+  display: block;
+  margin-top: 0.3rem;
+  color: #b42318;
+}

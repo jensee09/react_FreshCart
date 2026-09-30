@@ -1,0 +1,59 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: $z-index-modal-backdrop;
+  @include flex-center;
+  padding: 1rem;
+  animation: fadeIn 200ms ease;
+}
+
+.modal-content-custom {
+  background: #ffffff;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 250ms ease;
+
+  .modal-header-custom {
+    @include flex-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #eee;
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $dark;
+    }
+
+    .close-modal-btn {
+      font-size: 1.4rem;
+      color: #777;
+      &:hover {
+        color: $dark;
+      }
+    }
+  }
+
+  .modal-body-custom {
+    padding: 1.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

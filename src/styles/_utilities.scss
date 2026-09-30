@@ -1,0 +1,23 @@
+@use "variables" as *;
+
+.text-primary { color: $primary !important; }
+.text-secondary { color: $secondary !important; }
+.text-danger { color: $danger !important; }
+.text-success { color: $success !important; }
+.text-muted { color: #777 !important; }
+
+.bg-light { background-color: #f8f9fa !important; }
+.bg-white { background-color: #ffffff !important; }
+
+.rounded-lg { border-radius: $border-radius-lg !important; }
+.shadow-sm { box-shadow: $box-shadow !important; }
+
+.pulse-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}

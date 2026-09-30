@@ -1,0 +1,63 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.order-history-card {
+  border: 1px solid #eee;
+  border-radius: $border-radius-lg;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+
+  .order-card-header {
+    background: #f8f9fa;
+    padding: 1rem 1.2rem;
+    @include flex-between;
+    border-bottom: 1px solid #eee;
+    font-size: 0.88rem;
+
+    .meta-group {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .order-status-pill {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+
+      &.delivered { background: #e8f5e9; color: $primary-dark; }
+      &.processing { background: #fff3e0; color: $secondary-dark; }
+      &.shipped { background: #e1f5fe; color: $info; }
+    }
+  }
+
+  .order-card-body {
+    padding: 1.2rem;
+
+    .order-item-mini {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 0;
+
+      img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+
+      .item-info {
+        flex: 1;
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+
+      .item-price {
+        font-weight: 700;
+        color: $primary-dark;
+      }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 2rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout-step-box {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  margin-bottom: 1.5rem;
+
+  .step-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $dark;
+    margin-bottom: 1.2rem;
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: $primary;
+      color: white;
+      @include flex-center;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+  }
+
+  .address-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+
+    .address-card {
+      border: 2px solid #e0e0e0;
+      border-radius: $border-radius;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &.selected {
+        border-color: $primary;
+        background: #f1f8e9;
+      }
+
+      .addr-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: $primary-dark;
+        margin-bottom: 0.4rem;
+      }
+
+      .addr-name {
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .addr-text {
+        font-size: 0.82rem;
+        color: #666;
+        margin-top: 0.2rem;
+      }
+    }
+  }
+
+  .payment-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+
+    .payment-option-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: $border-radius;
+      cursor: pointer;
+
+      &.selected {
+        border-color: $primary;
+        background: #f1f8e9;
+      }
+
+      .pay-icon {
+        font-size: 1.5rem;
+        color: $primary;
+      }
+
+      .pay-info {
+        strong {
+          display: block;
+          font-size: 0.9rem;
+        }
+        span {
+          font-size: 0.78rem;
+          color: #777;
+        }
+      }
+    }
+  }
+}

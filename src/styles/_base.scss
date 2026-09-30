@@ -1,0 +1,98 @@
+// FreshCart Base Styles
+@use "variables" as *;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family-base;
+  color: $dark;
+  background:
+    radial-gradient(ellipse at 8% 6%, rgba(27, 94, 32, 0.09), transparent 30rem),
+    radial-gradient(ellipse at 92% 42%, rgba(27, 94, 32, 0.045), transparent 34rem),
+    #f3f8f3;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: background-color 280ms ease, color 280ms ease;
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: -20%;
+  content: '';
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(27, 94, 32, 0.05), transparent 48%);
+  animation: freshcart-ambient-drift 24s ease-in-out infinite alternate;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color $transition-fast;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: $primary-light;
+}
+
+.fresh-container {
+  width: 100%;
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.page-wrapper {
+  min-height: calc(100vh - 350px);
+  padding-bottom: 3rem;
+}
+
+@keyframes freshcart-ambient-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(0.96); }
+  to { transform: translate3d(2%, 1%, 0) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

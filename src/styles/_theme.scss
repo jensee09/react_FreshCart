@@ -1,0 +1,55 @@
+@keyframes freshcart-enter {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.products-grid > *,
+.category-card,
+.feature-box,
+.metric-card,
+.order-history-card {
+  animation: freshcart-enter 420ms both;
+}
+
+.products-grid > *:nth-child(2n),
+.metric-card:nth-child(2n) {
+  animation-delay: 45ms;
+}
+
+.products-grid > *:nth-child(3n) {
+  animation-delay: 90ms;
+}
+
+.product-card,
+.category-card,
+.metric-card,
+.feature-box,
+.action-item,
+.fc-btn,
+.auth-role-button {
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease, color 220ms ease;
+}
+
+.product-card:hover,
+.category-card:hover,
+.metric-card:hover,
+.feature-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(25, 75, 35, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .products-grid > *,
+  .category-card,
+  .feature-box,
+  .metric-card,
+  .order-history-card {
+    animation: none;
+  }
+}

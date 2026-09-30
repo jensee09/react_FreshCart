@@ -1,0 +1,130 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.fc-footer {
+  background: #111827;
+  color: #9ca3af;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  margin-top: 4rem;
+
+  .footer-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #1f2937;
+    margin-bottom: 3rem;
+
+    .feature-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #1f2937;
+      padding: 1.2rem;
+      border-radius: $border-radius-lg;
+
+      .feat-icon {
+        font-size: 2.2rem;
+        color: $primary-light;
+      }
+
+      .feat-text {
+        h4 {
+          color: #fff;
+          font-size: 0.95rem;
+          font-weight: 700;
+          margin-bottom: 0.2rem;
+        }
+        p {
+          font-size: 0.8rem;
+          color: #9ca3af;
+        }
+      }
+    }
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+
+    .footer-col {
+      h5 {
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 30px;
+          height: 2px;
+          background: $primary-light;
+        }
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        a {
+          font-size: 0.88rem;
+          &:hover {
+            color: $primary-light;
+          }
+        }
+      }
+
+      p {
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .newsletter-form {
+        display: flex;
+        gap: 0.5rem;
+
+        input {
+          flex: 1;
+          padding: 0.5rem 0.8rem;
+          border-radius: $border-radius-sm;
+          border: 1px solid #374151;
+          background: #1f2937;
+          color: white;
+          outline: none;
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    @include flex-between;
+    justify-content: center;
+    padding-top: 2rem;
+    border-top: 1px solid #1f2937;
+    font-size: 0.85rem;
+    text-align: center;
+
+    .copy-text {
+      color: #6b7280;
+    }
+
+    .payment-icons {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      color: #d1d5db;
+    }
+  }
+}

@@ -1,0 +1,136 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.products-page-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-sidebar {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+
+  .sidebar-header {
+    @include flex-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.2rem;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $dark;
+    }
+
+    .clear-btn {
+      font-size: 0.8rem;
+      color: $primary;
+      font-weight: 600;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .filter-group {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 0.75rem;
+    }
+
+    .category-filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .cat-filter-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.4rem 0.6rem;
+        border-radius: $border-radius-sm;
+        cursor: pointer;
+        font-size: 0.88rem;
+        color: #555;
+        transition: background $transition-fast;
+
+        &:hover, &.active {
+          background: #f1f8e9;
+          color: $primary-dark;
+          font-weight: 600;
+        }
+
+        .item-cnt {
+          font-size: 0.75rem;
+          color: #999;
+        }
+      }
+    }
+
+    .price-slider-wrapper {
+      .price-range-labels {
+        @include flex-between;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: $primary-dark;
+        margin-top: 0.5rem;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: $primary;
+      }
+    }
+  }
+}
+
+.products-content-area {
+  .products-toolbar {
+    background: white;
+    padding: 0.85rem 1.2rem;
+    border-radius: $border-radius-lg;
+    border: 1px solid #eee;
+    @include flex-between;
+    margin-bottom: 1.5rem;
+
+    .results-count {
+      font-size: 0.9rem;
+      color: #666;
+      strong { color: $dark; }
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .sort-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+
+        select {
+          padding: 0.4rem 0.8rem;
+          border-radius: $border-radius-sm;
+          border: 1px solid #ddd;
+          outline: none;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

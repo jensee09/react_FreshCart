@@ -1,0 +1,57 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.delivery-tracker-box {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  border: 1px solid #eee;
+
+  .tracker-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 2rem 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: #e0e0e0;
+      z-index: 1;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 2;
+      background: white;
+      text-align: center;
+      padding: 0 0.5rem;
+
+      .step-icon-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #eee;
+        color: #888;
+        @include flex-center;
+        font-size: 1.2rem;
+        margin: 0 auto 0.5rem auto;
+      }
+
+      &.active .step-icon-circle {
+        background: $primary;
+        color: white;
+      }
+
+      .step-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #555;
+      }
+    }
+  }
+}
