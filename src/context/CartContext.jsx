@@ -4,26 +4,21 @@ import { getUserData, saveUserData } from '../services/userData'
 import { useAuth } from './AuthContext'
 
 const CartContext = createContext()
-
-const readCartItems = (key) => {
-  const saved = localStorage.getItem(key)
-  return saved ? JSON.parse(saved) : []
-}
+const EMPTY_CART = []
 
 export const CartProvider = ({ children }) => {
-  const { user } = useAuth()
-  const storageKey = `freshcart_cart_${user?.id || 'guest'}`
-  const [cartByUser, setCartByUser] = useState(() => ({
-    [storageKey]: readCartItems(storageKey),
-  }))
+  const { user, openLoginModal } = useAuth()
+  const [cartByUser, setCartByUser] = useState({})
   const [loadedCartKeys, setLoadedCartKeys] = useState({})
-  const cartItems = cartByUser[storageKey] ?? readCartItems(storageKey)
+  const cartItems = user?.id ? cartByUser[user.id] || EMPTY_CART : EMPTY_CART
+  const cartLoaded = Boolean(user?.id && loadedCartKeys[user.id])
   const setCartItems = (update) => {
+    if (!user?.id) return
     setCartByUser((previous) => {
-      const currentItems = previous[storageKey] ?? readCartItems(storageKey)
+      const currentItems = previous[user.id] || []
       const nextItems =
         typeof update === 'function' ? update(currentItems) : update
-      return { ...previous, [storageKey]: nextItems }
+      return { ...previous, [user.id]: nextItems }
     })
   }
 
@@ -38,44 +33,43 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     if (!user?.id) return
-    if (loadedCartKeys[user.id]) return
+    if (cartLoaded) return
 
     let active = true
     getUserData(user.id, 'cart')
-      .then(async (items) => {
+      .then((items) => {
         if (!active) return
-        const previousItems = readCartItems(storageKey)
-        const data = items.length === 0 && previousItems.length > 0
-          ? previousItems
-          : items
-        if (data !== items) await saveUserData(user.id, 'cart', data)
-        setCartByUser((previous) => ({ ...previous, [storageKey]: data }))
+        setCartByUser((previous) => ({ ...previous, [user.id]: items }))
         setLoadedCartKeys((previous) => ({ ...previous, [user.id]: true }))
       })
       .catch((error) => {
         console.error('Unable to load cart from the database:', error)
-        if (active) setLoadedCartKeys((previous) => ({ ...previous, [user.id]: true }))
       })
     return () => {
       active = false
     }
-  }, [loadedCartKeys, storageKey, user?.id])
+  }, [cartLoaded, user?.id])
 
   useEffect(() => {
-    if (!user?.id) localStorage.setItem(storageKey, JSON.stringify(cartItems))
-  }, [cartItems, storageKey, user?.id])
-
-  useEffect(() => {
-    if (!user?.id || !loadedCartKeys[user.id]) return
+    if (!user?.id || !cartLoaded) return
     const timeoutId = setTimeout(() => {
       saveUserData(user.id, 'cart', cartItems).catch((error) => {
         console.error('Unable to save cart to the database:', error)
       })
     }, 300)
     return () => clearTimeout(timeoutId)
-  }, [cartItems, loadedCartKeys, storageKey, user?.id])
+  }, [cartItems, cartLoaded, user?.id])
+
+  const canChangeCart = () => {
+    if (!user?.id) {
+      openLoginModal()
+      return false
+    }
+    return cartLoaded
+  }
 
   const addToCart = (product, quantity = 1, selectedWeight = null) => {
+    if (!canChangeCart()) return false
     const weightToUse = selectedWeight || product.weight || 'Default'
     setCartItems((prevItems) => {
       const existingIndex = prevItems.findIndex(
@@ -98,27 +92,34 @@ export const CartProvider = ({ children }) => {
         ]
       }
     })
+    return true
   }
 
   const removeFromCart = (cartId) => {
+    if (!canChangeCart()) return false
     setCartItems((prev) => prev.filter((item) => item.cartId !== cartId))
+    return true
   }
 
   const updateQuantity = (cartId, newQuantity) => {
+    if (!canChangeCart()) return false
     if (newQuantity <= 0) {
       removeFromCart(cartId)
-      return
+      return true
     }
     setCartItems((prev) =>
       prev.map((item) =>
         item.cartId === cartId ? { ...item, quantity: newQuantity } : item
       )
     )
+    return true
   }
 
   const clearCart = () => {
+    if (!canChangeCart()) return false
     setCartItems([])
     setAppliedCoupon(null)
+    return true
   }
 
   const applyCoupon = (code) => {

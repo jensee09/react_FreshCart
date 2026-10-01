@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { createHash, randomBytes } from 'crypto';
 import { fileURLToPath } from 'url';
-import { initDb, getPool } from './db.js';
+import { initDb } from './db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,24 +18,31 @@ app.use(cors());
 app.use(express.json({ limit: '8mb' }));
 
 let pool;
-initDb()
-  .then((dbPool) => {
-    pool = dbPool;
-  })
-  .catch((err) => {
-    console.error('❌ Failed to initialize MySQL Database fresh_cart. Ensure MySQL service is running on port 3306.', err);
-  });
+let dbInitialization;
 
-// Middleware checking DB pool availability
-app.use((req, res, next) => {
+const ensureDatabase = async () => {
   if (!pool) {
+    if (!dbInitialization) dbInitialization = initDb();
     try {
-      pool = getPool();
-    } catch (e) {
-      return res.status(503).json({ error: 'MySQL Database service connecting or unavailable.' });
+      pool = await dbInitialization;
+    } catch (error) {
+      dbInitialization = null;
+      throw error;
     }
   }
-  next();
+  return pool;
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await ensureDatabase();
+    next();
+  } catch (error) {
+    console.error('MySQL is unavailable for this request:', error);
+    res.status(503).json({
+      error: 'MySQL is unavailable. Check the Vercel database environment variables, database access, and network settings.',
+    });
+  }
 });
 
 const createSession = async (userId) => {
@@ -607,6 +614,10 @@ app.delete('/api/products/:id', authenticate, requireAdmin, async (req, res) => 
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`⚡ [FreshCart MySQL Server] running on http://localhost:${PORT}`);
-});
+export default app;
+
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
+  app.listen(PORT, () => {
+    console.log(`⚡ [FreshCart MySQL Server] running on http://localhost:${PORT}`);
+  });
+}

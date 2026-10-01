@@ -29,29 +29,13 @@ let pool = null;
 
 export async function initDb() {
   try {
+    const missingVercelConfig = ['DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME']
+      .filter((key) => !process.env[key]);
+    if (process.env.VERCEL && missingVercelConfig.length > 0) {
+      throw new Error(`Missing Vercel environment variables: ${missingVercelConfig.join(', ')}`);
+    }
+
     console.log('🔄 [MySQL] Initializing database...');
-
-    // ==================================================
-    // 1. CONNECT TO MYSQL SERVER
-    // ==================================================
-
-    const rootConnection = await mysql.createConnection({
-      host: DB_HOST,
-      user: DB_USER,
-      password: DB_PASSWORD,
-      port: DB_PORT
-    });
-
-    // Create database if it does not exist
-    await rootConnection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`
-    );
-
-    await rootConnection.end();
-
-    // ==================================================
-    // 2. CREATE DATABASE CONNECTION POOL
-    // ==================================================
 
     pool = mysql.createPool({
       host: DB_HOST,
@@ -61,9 +45,11 @@ export async function initDb() {
       port: DB_PORT,
 
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: process.env.VERCEL ? 3 : 10,
       queueLimit: 0
     });
+
+    await pool.query('SELECT 1');
 
     console.log(
       `✅ [MySQL] Connected to database "${DB_NAME}" on ${DB_HOST}:${DB_PORT}`

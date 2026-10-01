@@ -1,5 +1,13 @@
 # React + Vite
 
+## MySQL configuration
+
+Copy `.env.example` to `.env` and set the connection values for your MySQL server. The named database must already exist; the app creates and updates its tables on first API use. The `.env` file contains connection settings only; FreshCart stores account, cart, wishlist, and order data in MySQL tables. Cart and wishlist actions require a signed-in account.
+
+Keep `.env` private and out of Git. For Vercel deployment, add `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` under Project Settings → Environment Variables. Use a hosted MySQL provider and allow its network access from Vercel. Do not upload `.env`.
+
+Vercel serves the React single-page app and the Express API function from this repository. The root URL (`/`) opens the home page; `/api/*` requests are handled by `api/[...path].js`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

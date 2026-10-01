@@ -12,13 +12,15 @@ import { useProducts } from '../context/ProductContext'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useNotification } from '../context/NotificationContext'
+import { useAuth } from '../context/AuthContext'
 import { formatCurrency } from '../utils/formatters'
 
 export default function ProductQuickViewModal() {
   const { quickViewProduct, setQuickViewProduct } = useProducts()
   const { addToCart } = useCart()
   const { toggleWishlist, isInWishlist } = useWishlist()
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
+  const { isLoggedIn } = useAuth()
 
   const [quantity, setQuantity] = useState(1)
   const [selectedWeight, setSelectedWeight] = useState('')
@@ -32,7 +34,11 @@ export default function ProductQuickViewModal() {
   const isLiked = isInWishlist(product.id)
 
   const handleAdd = () => {
-    addToCart(product, quantity, weightToUse)
+    const added = addToCart(product, quantity, weightToUse)
+    if (!added) {
+      if (isLoggedIn) notifyError('Your cart is still loading from MySQL. Please try again.')
+      return
+    }
     notifySuccess(
       `Added ${quantity} x ${product.name} (${weightToUse}) to cart!`
     )
@@ -40,7 +46,11 @@ export default function ProductQuickViewModal() {
   }
 
   const handleWishlist = () => {
-    toggleWishlist(product)
+    const changed = toggleWishlist(product)
+    if (!changed) {
+      if (isLoggedIn) notifyError('Your wishlist is still loading from MySQL. Please try again.')
+      return
+    }
     notifySuccess(
       isLiked ? 'Removed from Wishlist' : 'Added to Wishlist!'
     )

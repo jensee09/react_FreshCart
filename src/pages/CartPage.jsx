@@ -10,6 +10,7 @@ import {
   FiTag,
 } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import { useNotification } from '../context/NotificationContext'
 import { formatCurrency } from '../utils/formatters'
 
@@ -28,6 +29,7 @@ export default function CartPage() {
     removeCoupon,
   } = useCart()
 
+  const { isLoggedIn, openLoginModal } = useAuth()
   const { notifySuccess, notifyError } = useNotification()
   const [couponCodeInput, setCouponCodeInput] = useState('')
   const navigate = useNavigate()
@@ -49,13 +51,27 @@ export default function CartPage() {
       <div className="fresh-container page-wrapper" style={{ textAlign: 'center', paddingTop: '4rem' }}>
         <div style={{ background: '#fff', padding: '3rem', borderRadius: '24px', maxWidth: '500px', margin: '0 auto', border: '1px solid #eee' }}>
           <FiShoppingBag style={{ fontSize: '4rem', color: '#ccc', marginBottom: '1rem' }} />
-          <h2 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>Your Cart is Empty</h2>
+          <h2 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>
+            {isLoggedIn ? 'Your Cart is Empty' : 'Sign In to Use Your Cart'}
+          </h2>
           <p style={{ color: '#777', marginBottom: '1.5rem' }}>
-            Looks like you haven't added any fresh groceries to your cart yet.
+            {isLoggedIn
+              ? "Looks like you haven't added any fresh groceries to your cart yet."
+              : 'Sign in to save your cart to your account in MySQL.'}
           </p>
-          <Link to="/products" className="fc-btn fc-btn-primary fc-btn-lg">
-            Shop Organic Produce Now
-          </Link>
+          {isLoggedIn ? (
+            <Link to="/products" className="fc-btn fc-btn-primary fc-btn-lg">
+              Shop Organic Produce Now
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="fc-btn fc-btn-primary fc-btn-lg"
+              onClick={openLoginModal}
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </div>
     )

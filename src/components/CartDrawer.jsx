@@ -9,6 +9,7 @@ import {
   FiArrowRight,
 } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import { formatCurrency } from '../utils/formatters'
 
 export default function CartDrawer() {
@@ -25,6 +26,7 @@ export default function CartDrawer() {
     freeShippingProgress,
     amountForFreeShipping,
   } = useCart()
+  const { isLoggedIn, openLoginModal } = useAuth()
 
   const navigate = useNavigate()
 
@@ -83,14 +85,21 @@ export default function CartDrawer() {
           {cartItems.length === 0 ? (
             <div className="empty-cart-state">
               <FiShoppingBag className="empty-icon" />
-              <h4>Your cart is empty</h4>
-              <p>Add some fresh organic produce to get started!</p>
+              <h4>{isLoggedIn ? 'Your cart is empty' : 'Sign in to use your cart'}</h4>
+              <p>
+                {isLoggedIn
+                  ? 'Add some fresh organic produce to get started!'
+                  : 'Your cart is saved to your account in MySQL after you sign in.'}
+              </p>
               <button
                 type="button"
                 className="fc-btn fc-btn-primary"
-                onClick={() => setIsCartDrawerOpen(false)}
+                onClick={() => {
+                  setIsCartDrawerOpen(false)
+                  if (!isLoggedIn) openLoginModal()
+                }}
               >
-                Start Shopping
+                {isLoggedIn ? 'Start Shopping' : 'Sign In'}
               </button>
             </div>
           ) : (

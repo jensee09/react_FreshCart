@@ -3,69 +3,65 @@ import { useAuth } from './AuthContext'
 import { getUserData, saveUserData } from '../services/userData'
 
 const WishlistContext = createContext()
-
-const readWishlistItems = (key) => {
-  const saved = localStorage.getItem(key)
-  return saved ? JSON.parse(saved) : []
-}
+const EMPTY_WISHLIST = []
 
 export const WishlistProvider = ({ children }) => {
-  const { user } = useAuth()
-  const storageKey = `freshcart_wishlist_${user?.id || 'guest'}`
-  const [wishlistByUser, setWishlistByUser] = useState(() => ({
-    [storageKey]: readWishlistItems(storageKey),
-  }))
+  const { user, openLoginModal } = useAuth()
+  const [wishlistByUser, setWishlistByUser] = useState({})
   const [loadedWishlistKeys, setLoadedWishlistKeys] = useState({})
-  const wishlistItems = wishlistByUser[storageKey] ?? readWishlistItems(storageKey)
+  const wishlistItems = user?.id
+    ? wishlistByUser[user.id] || EMPTY_WISHLIST
+    : EMPTY_WISHLIST
+  const wishlistLoaded = Boolean(user?.id && loadedWishlistKeys[user.id])
   const setWishlistItems = (update) => {
+    if (!user?.id) return
     setWishlistByUser((previous) => {
-      const currentItems = previous[storageKey] ?? readWishlistItems(storageKey)
+      const currentItems = previous[user.id] || []
       const nextItems =
         typeof update === 'function' ? update(currentItems) : update
-      return { ...previous, [storageKey]: nextItems }
+      return { ...previous, [user.id]: nextItems }
     })
   }
 
   useEffect(() => {
     if (!user?.id) return
-    if (loadedWishlistKeys[user.id]) return
+    if (wishlistLoaded) return
 
     let active = true
     getUserData(user.id, 'wishlist')
-      .then(async (items) => {
+      .then((items) => {
         if (!active) return
-        const previousItems = readWishlistItems(storageKey)
-        const data = items.length === 0 && previousItems.length > 0
-          ? previousItems
-          : items
-        if (data !== items) await saveUserData(user.id, 'wishlist', data)
-        setWishlistByUser((previous) => ({ ...previous, [storageKey]: data }))
+        setWishlistByUser((previous) => ({ ...previous, [user.id]: items }))
         setLoadedWishlistKeys((previous) => ({ ...previous, [user.id]: true }))
       })
       .catch((error) => {
         console.error('Unable to load wishlist from the database:', error)
-        if (active) setLoadedWishlistKeys((previous) => ({ ...previous, [user.id]: true }))
       })
     return () => {
       active = false
     }
-  }, [loadedWishlistKeys, storageKey, user?.id])
+  }, [wishlistLoaded, user?.id])
 
   useEffect(() => {
-    if (!user?.id) localStorage.setItem(storageKey, JSON.stringify(wishlistItems))
-  }, [storageKey, user?.id, wishlistItems])
-
-  useEffect(() => {
-    if (!user?.id || !loadedWishlistKeys[user.id]) return
+    if (!user?.id || !wishlistLoaded) return
     const timeoutId = setTimeout(() => {
       saveUserData(user.id, 'wishlist', wishlistItems).catch((error) => {
         console.error('Unable to save wishlist to the database:', error)
       })
     }, 300)
     return () => clearTimeout(timeoutId)
-  }, [loadedWishlistKeys, storageKey, user?.id, wishlistItems])
+  }, [user?.id, wishlistLoaded, wishlistItems])
+
+  const canChangeWishlist = () => {
+    if (!user?.id) {
+      openLoginModal()
+      return false
+    }
+    return wishlistLoaded
+  }
 
   const toggleWishlist = (product) => {
+    if (!canChangeWishlist()) return false
     setWishlistItems((prev) => {
       const exists = prev.some((item) => item.id === product.id)
       if (exists) {
@@ -74,6 +70,7 @@ export const WishlistProvider = ({ children }) => {
         return [...prev, product]
       }
     })
+    return true
   }
 
   const isInWishlist = (productId) => {
@@ -81,7 +78,9 @@ export const WishlistProvider = ({ children }) => {
   }
 
   const clearWishlist = () => {
+    if (!canChangeWishlist()) return false
     setWishlistItems([])
+    return true
   }
 
   return (

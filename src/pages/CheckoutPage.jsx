@@ -88,6 +88,24 @@ export default function CheckoutPage() {
     navigate(`/order-success?orderId=${orderId}`)
   }
 
+  if (!user) {
+    return (
+      <div className="fresh-container page-wrapper" style={{ paddingTop: '3rem', textAlign: 'center' }}>
+        <h2>Sign In Required</h2>
+        <p style={{ color: '#666', margin: '1rem 0' }}>
+          Sign in to load your cart from MySQL and continue to checkout.
+        </p>
+        <button
+          type="button"
+          className="fc-btn fc-btn-primary"
+          onClick={openLoginModal}
+        >
+          Sign In
+        </button>
+      </div>
+    )
+  }
+
   if (cartItems.length === 0) {
     return (
       <div className="fresh-container page-wrapper" style={{ paddingTop: '3rem', textAlign: 'center' }}>

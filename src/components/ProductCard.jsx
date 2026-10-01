@@ -12,13 +12,15 @@ import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useProducts } from '../context/ProductContext'
 import { useNotification } from '../context/NotificationContext'
+import { useAuth } from '../context/AuthContext'
 import { formatCurrency } from '../utils/formatters'
 
 export default function ProductCard({ product }) {
   const { addToCart, cartItems, updateQuantity } = useCart()
   const { toggleWishlist, isInWishlist } = useWishlist()
   const { setQuickViewProduct } = useProducts()
-  const { notifySuccess } = useNotification()
+  const { notifySuccess, notifyError } = useNotification()
+  const { isLoggedIn } = useAuth()
 
   const [selectedWeight, setSelectedWeight] = useState(
     product.weightOptions ? product.weightOptions[0] : product.weight
@@ -34,13 +36,21 @@ export default function ProductCard({ product }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation()
-    addToCart(product, 1, selectedWeight)
+    const added = addToCart(product, 1, selectedWeight)
+    if (!added) {
+      if (isLoggedIn) notifyError('Your cart is still loading from MySQL. Please try again.')
+      return
+    }
     notifySuccess(`Added ${product.name} (${selectedWeight}) to cart!`)
   }
 
   const handleWishlistToggle = (e) => {
     e.stopPropagation()
-    toggleWishlist(product)
+    const changed = toggleWishlist(product)
+    if (!changed) {
+      if (isLoggedIn) notifyError('Your wishlist is still loading from MySQL. Please try again.')
+      return
+    }
     notifySuccess(
       isLiked
         ? `Removed ${product.name} from Wishlist`
