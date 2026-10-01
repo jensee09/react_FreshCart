@@ -4,5 +4,10 @@
       "source": "/:path((?!api/).*)",
       "destination": "/index.html"
     }
+    ,
+     {
+      "source": "/api/:path*",
+      "destination": "https://freshcart-api.onrender.com/api/:path*"
+    },
   ]
 }
